@@ -2,7 +2,7 @@ package com.checo.shortlink.admin.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.checo.shortlink.admin.common.convention.result.Result;
-import com.checo.shortlink.admin.remote.dto.ShortLinkRemoteService;
+import com.checo.shortlink.admin.remote.ShortLinkRemoteService;
 import com.checo.shortlink.admin.remote.dto.req.ShortLinkCreateReqDTO;
 import com.checo.shortlink.admin.remote.dto.req.ShortLinkPageReqDTO;
 import com.checo.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
