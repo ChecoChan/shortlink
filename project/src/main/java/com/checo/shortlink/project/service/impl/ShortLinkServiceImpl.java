@@ -24,6 +24,7 @@ import com.checo.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.checo.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.checo.shortlink.project.service.ShortLinkService;
 import com.checo.shortlink.project.toolkit.HashUtil;
+import com.checo.shortlink.project.toolkit.LinkUtil;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +39,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -93,6 +95,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException(String.format("短链接：%s 生成重复", fullShortUrl));
             }
         }
+        stringRedisTemplate.opsForValue().set(
+                String.format(GOTO_SHORT_LINK_KEY, fullShortUrl),
+                requestParam.getOriginUrl(),
+                LinkUtil.getLinkCacheValidTime(requestParam.getValidDate()),
+                TimeUnit.MICROSECONDS
+        );
         shortUriCreateCachePenetrationBloomFilter.add(fullShortUrl);
         return ShortLinkCreateRespDTO.builder()
                 .gid(requestParam.getGid())
