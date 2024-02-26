@@ -14,7 +14,7 @@ public class RecycleBinSaveReqDTO {
     private String gid;
 
     /**
-     * 全部短链接
+     * 完整短链接
      */
     private String fullShortUrl;
 }
