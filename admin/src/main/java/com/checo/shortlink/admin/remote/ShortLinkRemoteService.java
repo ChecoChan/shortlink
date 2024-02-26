@@ -78,7 +78,7 @@ public interface ShortLinkRemoteService {
      * 根据 URL 获取对应网站的标题
      *
      * @param url 目标网站地址
-     * @retur 网站标题
+     * @return 网站标题
      */
     default Result<String> getTitleByUrl(@RequestParam("url") String url) {
         String responseStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/title?url=" + url);
