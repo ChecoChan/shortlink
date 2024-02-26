@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.checo.shortlink.project.dao.entity.ShortLinkDO;
 import com.checo.shortlink.project.dao.mapper.ShortLinkMapper;
 import com.checo.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
+import com.checo.shortlink.project.dto.req.RecycleBinRemoveReqDTO;
 import com.checo.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.checo.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.checo.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -70,5 +71,20 @@ public class RecycleBinServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLin
                 .build();
         baseMapper.update(shortLinkDO, updateWrapper);
         stringRedisTemplate.delete(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
+    }
+
+    @Override
+    public void removeRecycleBin(RecycleBinRemoveReqDTO requestParam) {
+        LambdaUpdateWrapper<ShortLinkDO> updateWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
+                .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
+                .eq(ShortLinkDO::getGid, requestParam.getGid())
+                .eq(ShortLinkDO::getEnableStatus, 1)
+                .eq(ShortLinkDO::getDelFlag, 0)
+                .eq(ShortLinkDO::getDelTime, 0L);
+        ShortLinkDO delShortLinkDO = ShortLinkDO.builder()
+                .delTime(System.currentTimeMillis())
+                .build();
+        delShortLinkDO.setDelFlag(1);
+        baseMapper.update(delShortLinkDO, updateWrapper);
     }
 }

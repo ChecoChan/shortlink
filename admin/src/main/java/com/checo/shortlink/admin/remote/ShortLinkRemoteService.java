@@ -9,6 +9,7 @@ import com.checo.shortlink.admin.remote.dto.req.*;
 import com.checo.shortlink.admin.remote.dto.resp.ShortLinkCreateRespDTO;
 import com.checo.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.checo.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
@@ -116,5 +117,13 @@ public interface ShortLinkRemoteService {
      */
     default void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam) {
         HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/recover", JSON.toJSONString(requestParam));
+    }
+
+    /**
+     * 移除短链接
+     * @param requestParam 移除短链接请求参数
+     */
+    default void removeRecycleBin(@RequestBody RecycleBinRemoveReqDTO requestParam) {
+        HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/remove", JSON.toJSONString(requestParam));
     }
 }
