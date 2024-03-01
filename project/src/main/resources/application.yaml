@@ -19,6 +19,8 @@ spring:
     static-path-pattern: /static/**
 
 short-link:
+  domain:
+    default: nurl.ink
   stats:
     locale:
       amap-key: d2f25e2f56eb38d2aad47eb05fe8f594
