@@ -86,7 +86,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public void update(UserUpdateReqDTO requestParam) {
-        // TODO 验证当前用户名是否为登录用户
+        // 验证当前用户名是否为登录用户
+        String username = requestParam.getUsername();
+        String token = stringRedisTemplate.opsForHash().entries("login_" + username).keySet().stream()
+                .findFirst()
+                .map(Object::toString)
+                .orElseThrow(() -> new ClientException("用户 Token 不存在或用户未登录"));
+        Boolean hasLogin = checkLogin(username, token);
+        if (!hasLogin) {
+            throw new ClientException("用户 Token 不存在或用户未登录");
+        }
+        // 更改用户信息
         LambdaUpdateWrapper<UserDO> updateWrapper = Wrappers.lambdaUpdate(UserDO.class)
                 .eq(UserDO::getUsername, requestParam.getUsername());
         baseMapper.update(BeanUtil.toBean(requestParam, UserDO.class), updateWrapper);
