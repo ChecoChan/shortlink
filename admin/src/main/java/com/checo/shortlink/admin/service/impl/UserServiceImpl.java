@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.checo.shortlink.admin.common.convention.exception.ClientException;
+import com.checo.shortlink.admin.common.convention.exception.ServiceException;
 import com.checo.shortlink.admin.dao.entity.UserDO;
 import com.checo.shortlink.admin.dao.mapper.UserMapper;
 import com.checo.shortlink.admin.dto.req.UserLoginReqDTO;
@@ -49,6 +50,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
                 .eq(UserDO::getUsername, username);
         UserDO userDO = baseMapper.selectOne(queryWrapper);
+        if (userDO == null) {
+            throw new ServiceException(USER_NULL);
+        }
         return BeanUtil.toBean(userDO, UserRespDTO.class);
     }
 
