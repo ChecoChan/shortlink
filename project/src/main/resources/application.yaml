@@ -24,6 +24,15 @@ short-link:
   stats:
     locale:
       amap-key: d2f25e2f56eb38d2aad47eb05fe8f594
+  goto-domain:
+    # 白名单功能，默认不开启
+    white-list:
+      enable: false
+      names: 'Github、哔哩哔哩、Google'
+      details:
+        - github.com
+        - bilibili.com
+        - google.com
 
 mybatis-plus:
   configuration:
