@@ -13,5 +13,5 @@ public class ShortLinkConstant {
     /**
      * 高德获取接口地区接口获取地区
      */
-    public static final String APAP_REMOTE_URL = "https://restapi.amap.com/v3/ip";
+    public static final String AMAP_REMOTE_URL = "https://restapi.amap.com/v3/ip";
 }
