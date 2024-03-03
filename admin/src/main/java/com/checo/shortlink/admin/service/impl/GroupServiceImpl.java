@@ -14,7 +14,7 @@ import com.checo.shortlink.admin.dao.mapper.GroupMapper;
 import com.checo.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.checo.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.checo.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
-import com.checo.shortlink.admin.remote.ShortLinkRemoteService;
+import com.checo.shortlink.admin.remote.ShortLinkActualRemoteService;
 import com.checo.shortlink.admin.remote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.checo.shortlink.admin.service.GroupService;
 import com.checo.shortlink.admin.toolkit.RandomGenerator;
@@ -38,13 +38,8 @@ import static com.checo.shortlink.admin.common.constant.RedisCacheConstant.LOCK_
 @RequiredArgsConstructor
 public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
 
-    /**
-     * TODO 后续重构为 SpringCloud Feign 调用
-     */
-    ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
-    };
-
     private final RedissonClient redissonClient;
+    private final ShortLinkActualRemoteService shortLinkActualRemoteService;
 
     @Value("${short-link.group.max-num}")
     private Integer groupMaxNum;
@@ -89,7 +84,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getDelFlag, 0)
                 .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime);
         List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
-        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkRemoteService
+        Result<List<ShortLinkGroupCountQueryRespDTO>> listResult = shortLinkActualRemoteService
                 .listGroupShortLinkCount(groupDOList.stream().map(GroupDO::getGid).toList());
         List<ShortLinkGroupRespDTO> shortLinkGroupRespDTOList = BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
         shortLinkGroupRespDTOList.forEach(each -> {
