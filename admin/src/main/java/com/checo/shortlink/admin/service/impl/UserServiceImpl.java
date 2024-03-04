@@ -130,6 +130,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                     .findFirst()
                     .map(Object::toString)
                     .orElseThrow(() -> new ClientException("用户登录错误"));
+            stringRedisTemplate.expire(USER_LOGIN_KEY + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
             return new UserLoginRespDTO(token);
         }
         String uuid = UUID.randomUUID().toString();
